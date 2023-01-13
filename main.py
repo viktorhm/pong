@@ -28,18 +28,18 @@ def affiche(p1_x,p2_x,b_x,b_y, font_round,point_p1,point_p2,):
     window.blit(text_p1, dest=(270, 0))
     window.blit(text_p2, dest=(300, 0))
 
-def moove(p_x , key1 , key2): 
+def moove(p_y , key1 , key2): 
     if pygame.key.get_pressed()[key1]:
-        if p_x < 350  :
-            p_x += 2 
+        if p_y < 350  :
+            p_y += 2 
             
     if pygame.key.get_pressed()[key2]: 
-        if p_x >  0 :
-            p_x -=2
-    return p_x
+        if p_y >  0 :
+            p_y -=2
+    return p_y
 
 
-def colision(b_x,b_y,b_vector,p1_x,p2_x):
+def colision(b_x,b_y,b_vector,p1_y,p2_y):
    
 # test de bordure 
     if b_y > 400 :
@@ -49,16 +49,20 @@ def colision(b_x,b_y,b_vector,p1_x,p2_x):
         b_vector[1] = -b_vector[1]
         
         
-# test de joueur 
-    """
-    if b_y> 0+10 and p1_x == b_x:
-        b_vector[0] = -b_vector[0]
-        print("joueur")
-    """
+ #test de joueur 
+    for i in range (50):
+        if b_x == 10 and p1_y+i == b_y: 
+            b_vector[0] = -b_vector[0]
+            
+        if b_x == 590 and p2_y+i == b_y :
+            b_vector[0] = -b_vector[0]
+            
+        
+    
 #tranforme le vecteur en cord 
     b_x = b_x + b_vector[0]
     b_y = b_y + b_vector[1]
-    return (b_x,b_y)
+    return (b_x,b_y,False)
 
 
 def point (b_x,point_p1,point_p2):
@@ -102,30 +106,36 @@ while loop:
         info_game = [True,0,0]
         print("-----start-----")
         
-        
+    
 
 
     if info_game[0] == True : 
         print("test")
-        p1_x = 200-25
-        p2_x = 200-25
+        p1_y = 200-25
+        p2_y = 200-25
+        time_tick =100
+
         pos_b=[300,200]
         b_vector=[-1,1]#[random.uniform(-1.0,1.0),random.uniform(-1.0,1.0)]
         info_game[0] =False
 
-    p1_x=moove(p1_x, pygame.K_UP, pygame.K_DOWN )
-    p2_x=moove(p2_x, pygame.K_z , pygame.K_s)
-    pos_b = colision(pos_b[0],pos_b[1],b_vector,p1_x,p2_x)
+    p1_y=moove(p1_y, pygame.K_UP, pygame.K_DOWN )
+    p2_y=moove(p2_y, pygame.K_z , pygame.K_s)
+    pos_b = colision(pos_b[0],pos_b[1],b_vector,p1_y,p2_y)
     info_game = point(pos_b[0],info_game[1],info_game[2])
     win = gagne(info_game[1],info_game[2])
+   
+
 
     
 
-    affiche(p1_x ,p2_x,pos_b[0],pos_b[1],font_round,info_game[1],info_game[2])
+    affiche(p1_y ,p2_y,pos_b[0],pos_b[1],font_round,info_game[1],info_game[2])
 
 
     pygame.display.flip()
-    clock.tick(120)
+
+    
+    clock.tick(time_tick+0.01)
     #print(clock)
     pygame.display.update()
     window.blit(background,(0,0))
